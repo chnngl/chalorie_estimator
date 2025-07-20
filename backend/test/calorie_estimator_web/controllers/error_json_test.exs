@@ -1,12 +1,20 @@
-defmodule CalorieEstimatorWeb.ErrorJSONTest do
-  use CalorieEstimatorWeb.ConnCase, async: true
+defmodule CalorieEstimatorWeb.CalorieControllerTest do
+  use CalorieEstimatorWeb.ConnCase
 
-  test "renders 404" do
-    assert CalorieEstimatorWeb.ErrorJSON.render("404.json", %{}) == %{errors: %{detail: "Not Found"}}
+  @valid_ingredients %{"ingredients" => "chicken, rice, olive oil"}
+  @invalid_ingredients %{"ingredients" => ""}
+
+  test "POST /api/estimate returns 200 with valid input", %{conn: conn} do
+    conn = post(conn, "/api/estimate", @valid_ingredients)
+    assert json_response(conn, 200)["calories"]
   end
 
-  test "renders 500" do
-    assert CalorieEstimatorWeb.ErrorJSON.render("500.json", %{}) ==
-             %{errors: %{detail: "Internal Server Error"}}
-  end
+test "POST /api/estimate returns 400 with missing input", %{conn: conn} do
+  conn = post(conn, "/api/estimate", @invalid_ingredients)
+  assert json_response(conn, 400)["error"]
 end
+end
+
+
+
+

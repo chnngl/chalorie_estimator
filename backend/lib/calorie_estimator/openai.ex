@@ -1,46 +1,39 @@
 defmodule CalorieEstimator.OpenAI do
-  @moduledoc """
-  Module to call OpenAI API for calorie estimation
-  """
+  @openai_endpoint "https://api.openai.com/v1/chat/completions"
 
-  @api_key System.get_env("OPENAI_API_KEY")
-  @endpoint "https://api.openai.com/v1/chat/completions"
+  def call_api(ingredients) do
+    key = System.get_env("OPENAI_API_KEY")
+    IO.inspect(key, label: "OPENAI_API_KEY being used")
 
-  def estimate_calories(ingredients) do
-    prompt = """
-    Estimate the calorie breakdown for this meal:
-    "#{ingredients}".
-    Respond in this JSON format:
-    {
-      "ingredient": "calories",
-      ...
-      "total": "total kcal"
+    body = %{
+      model: "gpt-3.5-turbo",
+      messages: [
+        %{
+          role: "system",
+          content: "You are a helpful nutritionist that estimates calories for meals."
+        },
+        %{
+          role: "user",
+          content: "Estimate calories for: #{ingredients}"
+        }
+      ]
     }
-    """
 
     headers = [
-      {"Authorization", "Bearer #{@api_key}"},
+      {"Authorization", "Bearer #{key}"},
       {"Content-Type", "application/json"}
     ]
 
-    body = %{
-      "model" => "gpt-3.5-turbo",
-      "messages" => [%{role: "user", content: prompt}]
-    }
+    case HTTPoison.post(@openai_endpoint, Jason.encode!(body), headers) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
+        {:ok, Jason.decode!(response_body)}
 
-    HTTPoison.post(@endpoint, Jason.encode!(body), headers)
-    |> handle_response()
-  end
+      {:ok, %HTTPoison.Response{status_code: 429}} ->
+        {:error, %{"error" => %{"code" => 429}}}
 
-  defp handle_response({:ok, %HTTPoison.Response{status_code: 200, body: body}}) do
-    case Jason.decode(body) do
-      {:ok, %{"choices" => [%{"message" => %{"content" => content}}]}} ->
-        Jason.decode(content)
-
-      _ -> {:error, "Invalid response format from OpenAI"}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
-
-  defp handle_response({:ok, %HTTPoison.Response{status_code: code}}), do: {:error, "HTTP #{code}"}
-  defp handle_response({:error, error}), do: {:error, inspect(error)}
 end
+
