@@ -40,5 +40,11 @@ Body Example:
 }
 Response Example:
 {
-  "calories": "A meal with chicken, rice, and olive oil has around 370 calories..."
+  Estimated Calories
+The calorie content of beef and rice can vary depending on the type and preparation method. However, as a general estimate:
+
+- 3 ounces of cooked beef (such as sirloin or ground beef) contains around 200-250 calories.
+- 1 cup of cooked white rice contains around 200 calories.
+
+So, a meal consisting of 3 ounces of beef and 1 cup of rice would likely contain around 400-450 calories.
 }
