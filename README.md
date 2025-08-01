@@ -16,23 +16,23 @@ A simple full-stack web app built with **Phoenix (Elixir)** and **React (Vite)**
 - **HTTP**: Axios
 
 ### Backend Setup
-cd backend
-mix deps.get
-Create a .env file or export your OpenAI API key (required for backend to function):
-export OPENAI_API_KEY=your-openai-api-key
+- cd backend
+- mix deps.get
+- Create a .env file or export your OpenAI API key (required for backend to function):
+- export OPENAI_API_KEY=your-openai-api-key
 
 Start the Phoenix server:
 mix phx.server
 
 ### Frontend Setup
-cd frontend
-npm install
-npm run dev
+- cd frontend
+- npm install
+- npm run dev
 
 ### Running Tests (Backend)
-cd backend
-mix test
-API Endpoint
+- cd backend
+- mix test
+# API Endpoint
 POST /api/estimate
 Body Example:
 {
