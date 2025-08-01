@@ -21,7 +21,7 @@ A simple full-stack web app built with **Phoenix (Elixir)** and **React (Vite)**
 - Create a .env file or export your OpenAI API key (required for backend to function):
 - export OPENAI_API_KEY=your-openai-api-key
 
-Start the Phoenix server:
+- Start the Phoenix server:
 mix phx.server
 
 ### Frontend Setup
